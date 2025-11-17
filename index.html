@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Baby-Making-Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Schnörkelige, gut lesbare Schriftarten von Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      font-family: 'Josefin Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #ffffff;
+      background-image: url("background.jpg"); /* <-- Dein Bild */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dunkle leichte Überlagerung, damit Text besser lesbar ist */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      max-width: 700px;
+      backdrop-filter: blur(3px);
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    #countdown {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .time-box {
+      min-width: 80px;
+      padding: 1rem 0.9rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-top: 0.25rem;
+      opacity: 0.85;
+    }
+
+    .end-text {
+      font-size: 1.4rem;
+      margin-top: 1rem;
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .date-info {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 480px) {
+      .time-box {
+        min-width: 70px;
+        padding: 0.8rem 0.6rem;
+      }
+      .number {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="content">
+    <h1>Baby-Making-Time</h1>
+    <p class="subtitle">Countdown zu unserem nächsten Abenteuer</p>
+
+    <div id="countdown">
+      <div class="time-box">
+        <span id="days" class="number">0</span>
+        <span class="label">Tage</span>
+      </div>
+      <div class="time-box">
+        <span id="hours" class="number">0</span>
+        <span class="label">Stunden</span>
+      </div>
+      <div class="time-box">
+        <span id="minutes" class="number">0</span>
+        <span class="label">Minuten</span>
+      </div>
+      <div class="time-box">
+        <span id="seconds" class="number">0</span>
+        <span class="label">Sekunden</span>
+      </div>
+    </div>
+
+    <p class="date-info">
+      Zielzeit: 01.04.2026 &middot; 21:00 Uhr
+    </p>
+
+    <p id="end-text" class="end-text" style="display: none;">
+      Es ist Zeit für Baby-Making-Time! 💕
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      // Datum: 1. April 2026, 21:00 Uhr (deine lokale Zeit)
+      const targetDate = new Date(2026, 3, 1, 21, 0, 0); 
+      // Monate in JS: 0 = Januar, 3 = April
+
+      const daysSpan = document.getElementById('days');
+      const hoursSpan = document.getElementById('hours');
+      const minutesSpan = document.getElementById('minutes');
+      const secondsSpan = document.getElementById('seconds');
+      const endText = document.getElementById('end-text');
+      const countdown = document.getElementById('countdown');
+
+      function updateCountdown() {
+        const now = new Date();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+          // Countdown zu Ende
+          countdown.style.display = 'none';
+          endText.style.display = 'block';
+          return;
+        }
+
+        const totalSeconds = Math.floor(distance / 1000);
+        const days = Math.floor(totalSeconds / (60 * 60 * 24));
+        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
+
+        daysSpan.textContent = String(days);
+        hoursSpan.textContent = String(hours).padStart(2, '0');
+        minutesSpan.textContent = String(minutes).padStart(2, '0');
+        secondsSpan.textContent = String(seconds).padStart(2, '0');
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>
